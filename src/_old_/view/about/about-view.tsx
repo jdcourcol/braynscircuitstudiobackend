@@ -117,9 +117,11 @@ function getTitle() {
 
 function cleanUpAddress(address: URL): string {
     let cleanAddress = address.toString()
-    const PREFIX = "wss://"
-    if (cleanAddress.startsWith(PREFIX))
-        cleanAddress = cleanAddress.substring(PREFIX.length).trim()
+    // Handle both ws:// and wss:// for backward compatibility
+    if (cleanAddress.startsWith("ws://"))
+        cleanAddress = cleanAddress.substring("ws://".length).trim()
+    else if (cleanAddress.startsWith("wss://"))
+        cleanAddress = cleanAddress.substring("wss://".length).trim()
     while (cleanAddress.endsWith("/")) {
         cleanAddress = cleanAddress.substring(0, cleanAddress.length - 1)
     }

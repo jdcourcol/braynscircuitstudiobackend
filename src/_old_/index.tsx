@@ -6,8 +6,8 @@ import "./index.css"
 
 export async function startOldVersion() {
     Theme.apply(Theme.defaultDarkTheme)
-    const token = await getAuthenticationToken()
-    if (!token) return
+    // Authentication disabled - pass empty string as token
+    const token = await getAuthenticationToken() ?? ""
 
     if (await App.start(token)) removeSplash()
 }

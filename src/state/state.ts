@@ -35,5 +35,12 @@ export const State = {
                 guard: isNumber,
             },
         }),
+        authToken: new AtomicState<string | null>(null, {
+            storage: {
+                id: "beta/authToken",
+                guard: (value): value is string | null =>
+                    value === null || isString(value),
+            },
+        }),
     },
 }

@@ -8,6 +8,7 @@ import {
     useThrowableAsyncCallback,
 } from "@tolokoban/ui"
 import React from "react"
+import { authenticatedFetch } from "@/util/fetch"
 
 import { goto } from "./routes"
 
@@ -28,7 +29,7 @@ export default function Page() {
             for (let i = 0; i < 4; i++) {
                 const url = `${State.beta.webserver.value}simul.${i}.json`
                 try {
-                    const resp = await fetch(url)
+                    const resp = await authenticatedFetch(url)
                     const data: unknown = await resp.json()
                     console.log("🚀 [page] data = ", data) // @FIXME: Remove this line written on 2024-06-13 at 13:01
                 } catch (ex) {

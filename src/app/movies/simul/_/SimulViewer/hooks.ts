@@ -13,6 +13,7 @@ import {
 import { PainterSimulation } from "./painter/simul-painter"
 import { ActiveValue } from "../active-value"
 import { State } from "@/state"
+import { authenticatedFetch } from "@/util/fetch"
 
 export function useMountCanvasHandler(
     step: ActiveValue<number>,
@@ -140,7 +141,7 @@ interface SimulInfo {
 }
 
 async function loadSimulInfo(url: string): Promise<SimulInfo> {
-    const resp = await fetch(`${State.beta.webserver.value}${url}`)
+    const resp = await authenticatedFetch(`${State.beta.webserver.value}${url}`)
     const data: unknown = await resp.json()
     assertType<SimulInfo>(data, {
         stepsCount: "number",
@@ -156,7 +157,7 @@ async function loadSimulInfo(url: string): Promise<SimulInfo> {
 }
 
 async function loadFloat32Array(url: string): Promise<Float32Array> {
-    const resp = await fetch(`${State.beta.webserver.value}${url}`)
+    const resp = await authenticatedFetch(`${State.beta.webserver.value}${url}`)
     const data = await resp.arrayBuffer()
     return new Float32Array(data)
 }

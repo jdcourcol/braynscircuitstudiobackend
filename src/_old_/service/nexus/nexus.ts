@@ -56,69 +56,7 @@ export default class Nexus extends NexusInterface {
 }
 
 async function loadMeshesMapping(token: string): Promise<Map<number, string>> {
-    const url = `${NEXUS_VIEWS_URL}${encodeURIComponent(
-        "https://bbp.epfl.ch/neurosciencegraph/data/420e53b8-db21-4f70-a534-d799c4b59b5d"
-    )}/_search`
-    const resp = await fetch(url, {
-        method: "POST",
-        headers: {
-            accept: "*/*",
-            authorization: `Bearer ${token}`,
-            "content-type": "application/json",
-        },
-        body: JSON.stringify({
-            size: 10000,
-            query: {
-                bool: {
-                    must: [
-                        {
-                            match: {
-                                "@type": "Mesh",
-                            },
-                        },
-                        {
-                            match: {
-                                "atlasRelease.@id":
-                                    "https://bbp.epfl.ch/neurosciencegraph/data/4906ab85-694f-469d-962f-c0174e901885",
-                            },
-                        },
-                    ],
-                },
-            },
-        }),
-    })
-    const data: unknown = await resp.json()
-    assertType<{ hits: { hits: unknown[] } }>(data, {
-        hits: { hits: ["array", "unknown"] },
-    })
-    const list = data.hits.hits
-    const map = new Map<number, string>()
-    for (const item of list) {
-        try {
-            assertType<{
-                _source: {
-                    "@type": string[]
-                    distribution: { name: string; contentUrl: string }
-                }
-            }>(item, {
-                _source: {
-                    "@type": ["array", "string"],
-                    distribution: {
-                        contentUrl: "string",
-                        name: "string",
-                    },
-                },
-            })
-            if (!item._source["@type"].includes("Mesh")) continue
-
-            const { distribution } = item._source
-            const [start] = distribution.name.split(".")
-            const regionId = parseInt(start)
-            map.set(regionId, distribution.contentUrl)
-        } catch (ex) {
-            // This item is not a mesh
-            console.error(ex)
-        }
-    }
-    return map
+    // Nexus API call disabled - returning empty map
+    // Original call was to: https://bbp.epfl.ch/nexus/v1/views/bbp/atlas/https%3A%2F%2Fbbp.epfl.ch%2Fneurosciencegraph%2Fdata%2F420e53b8-db21-4f70-a534-d799c4b59b5d/_search
+    return new Map<number, string>()
 }

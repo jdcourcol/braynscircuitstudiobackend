@@ -62,28 +62,12 @@ class AuthService {
     }
 
     public async authorize() {
-        const token = await this.getToken()
-        if (!token) {
-            this.redirectToKeycloakAuthorizationPage()
-        }
-        return token
+        // Authentication disabled - return null without redirecting
+        return null
     }
 
     public async getToken(): Promise<string | null> {
-        const tokenFromStorage = this.getAccessTokenFromStorage()
-        if (typeof tokenFromStorage === "string") {
-            return tokenFromStorage
-        }
-        this.generateCodeVerifier()
-        const queryParams = new URLSearchParams(window.location.search)
-        if (queryParams.has("code")) {
-            const authorizationCode = queryParams.get("code") as string
-            const tokenFromKeycloak =
-                await this.getAccessTokenFromKeycloak(authorizationCode)
-            if (typeof tokenFromKeycloak === "string") {
-                return tokenFromKeycloak
-            }
-        }
+        // Authentication disabled - return null
         return null
     }
 

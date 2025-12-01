@@ -32,9 +32,9 @@ const APP_CONFIG: AppConfiguration = {
     allocationPartition:
         ENV_VARIABLES.BCS_ALLOCATION_PARTITION ?? DEFAULTS.allocationPartition,
     braynsPort: "5000",
-    braynsProtocol: "wss:",
+    braynsProtocol: "ws:",
     backendPort: "8000",
-    backendProtocol: "wss:",
+    backendProtocol: "ws:",
 }
 
 export default APP_CONFIG
