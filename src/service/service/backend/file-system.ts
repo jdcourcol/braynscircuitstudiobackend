@@ -9,11 +9,9 @@ export class FileSystem {
     async getRootPath(): Promise<string> {
         if (this._rootPath) return this._rootPath
 
-        const backend = this.getBackend()
-        const data = await backend.exec("fs-get-root")
-        assertString(data)
-        this._rootPath = data
-        return data
+        // Mocked to return /mnt instead of calling fs-get-root
+        this._rootPath = "/mnt"
+        return this._rootPath
     }
 
     async listDir(path: string): Promise<{

@@ -71,12 +71,8 @@ export default class BackendManager implements BackendManagerInterface {
     }
 
     async fsGetRootDir(): Promise<string> {
-        const { service } = this
-        const data = await service.exec("fs-get-root")
-        if (isString(data)) return data
-
-        console.error("fs-get-root should return a string!", data)
-        throw Error("fs-get-root should return a string!")
+        // Mocked to return /mnt instead of calling fs-get-root
+        return "/mnt"
     }
 
     async fsListDir(path: string): Promise<FileSystemDirectoryContent> {
@@ -95,50 +91,21 @@ export default class BackendManager implements BackendManagerInterface {
     }
 
     async fsExists(path: string): Promise<boolean> {
-        if (path.trim().length === 0) return false
-
-        try {
-            const { service } = this
-            const response = (await service.exec("fs-exists", {
-                path,
-            })) as FsExistsResponse
-            return isObject(response) && isString(response.type)
-        } catch (ex) {
-            // Most of the time an exception is thrown because the path
-            // is outside of the sandbox.
-            console.error(`Unable to check existence of "${path}":`, ex)
-            return false
-        }
+        // fs-exists API call disabled - returning false
+        // This will prevent file existence checks but may affect file browser functionality
+        return false
     }
 
     async fsIsDirectory(path: string): Promise<boolean> {
-        try {
-            const { service } = this
-            const response = (await service.exec("fs-exists", {
-                path,
-            })) as FsExistsResponse
-            return isObject(response) && response.type === "directory"
-        } catch (ex) {
-            // Most of the time an exception is thrown because the path
-            // is outside of the sandbox.
-            console.error(`Unable to check existence of "${path}":`, ex)
-            return false
-        }
+        // fs-exists API call disabled - returning false
+        // This will prevent directory existence checks but may affect file browser functionality
+        return false
     }
 
     async fsIsFile(path: string): Promise<boolean> {
-        try {
-            const { service } = this
-            const response = (await service.exec("fs-exists", {
-                path,
-            })) as FsExistsResponse
-            return isObject(response) && response.type !== "directory"
-        } catch (ex) {
-            // Most of the time an exception is thrown because the path
-            // is outside of the sandbox.
-            console.error(`Unable to check existence of "${path}":`, ex)
-            return false
-        }
+        // fs-exists API call disabled - returning false
+        // This will prevent file existence checks but may affect file browser functionality
+        return false
     }
 
     async listNodeSets(circuitPath: string): Promise<string[]> {

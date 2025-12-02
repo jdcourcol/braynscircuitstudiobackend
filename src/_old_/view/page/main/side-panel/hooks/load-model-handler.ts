@@ -41,19 +41,25 @@ export function useLoadModelHandler() {
     return React.useCallback(
         async (title: string, extensions?: string[]) => {
             try {
-                const path = await askFilename({
-                    title: `${title ?? "Select a file to add to the scene"}${
-                        extensions && extensions.length > 0
-                            ? ` (${extensions
-                                  .map((ext) =>
-                                      ext.charAt(0) === "." ? `*${ext}` : ext
-                                  )
-                                  .join(", ")})`
-                            : ""
-                    }`,
-                    filter: makeExtensionFilter(extensions),
-                    storageKey: `Import(${title})`,
-                })
+                // Hardcode path for "Circuits & Simulations"
+                let path: string | null = null
+                if (title === "Circuits & Simulations") {
+                    path = "/home/courcol/Circuit/rCA1-CYLINDER-REF-1PC-8PV-08/circuit_config.json"
+                } else {
+                    path = await askFilename({
+                        title: `${title ?? "Select a file to add to the scene"}${
+                            extensions && extensions.length > 0
+                                ? ` (${extensions
+                                      .map((ext) =>
+                                          ext.charAt(0) === "." ? `*${ext}` : ext
+                                      )
+                                      .join(", ")})`
+                                : ""
+                        }`,
+                        filter: makeExtensionFilter(extensions),
+                        storageKey: `Import(${title})`,
+                    })
+                }
                 if (!path) return
 
                 if (isPathOfSonataFile(path)) {

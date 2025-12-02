@@ -64,25 +64,9 @@ export default function BrowserView(props: BrowserViewProps) {
 
     React.useEffect(() => {
         async function checkDir() {
-            const fileExists = await props.fileSystemService.fileExists(
-                path ?? ""
-            )
-            if (path && fileExists) {
-                const pathParts = path.split("/")
-                const newPath = pathParts
-                    .slice(0, pathParts.length - 1)
-                    .join("/")
-
-                const confirm = await modal.confirm({
-                    content:
-                        "The provided path looks like a file. Do you want to load it?",
-                    autoClosable: true,
-                    labelOK: "Load file",
-                })
-                if (confirm) handleFileSelect(path)
-                addFavouriteDirectory(newPath)
-                setPath(newPath)
-            }
+            // Since fs-exists is disabled, we can't check if a path is a file
+            // Skip this check - the file browser will handle it via getDirPath
+            // which tries to list the directory instead
         }
         if (path !== null) {
             void checkDir()

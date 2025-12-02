@@ -130,19 +130,30 @@ export function useFavouriteDirectories(
  * Return `path` if it is an existing directory.
  * Otherwise, return its parent if it is an existing directory.
  * Otherwise, return `null`.
+ * 
+ * Since fs-exists is disabled, we try to list the directory instead.
  */
 async function getDirPath(
     service: FileSystemServiceInterface,
     path: string
 ): Promise<string | null> {
-    if (await service.directoryExists(path)) return path
+    // Try to list the directory - if it succeeds, it's a valid directory
+    try {
+        await service.listDirectory(path)
+        return path
+    } catch (ex) {
+        // If listing fails, try the parent directory
+        const parent = service.getDirectoryParent(path)
+        if (!parent) return null
 
-    const parent = service.getDirectoryParent(path)
-    if (!parent) return null
-
-    if (await service.directoryExists(parent)) return parent
-
-    return null
+        try {
+            await service.listDirectory(parent)
+            return parent
+        } catch (ex2) {
+            // Both failed, return null
+            return null
+        }
+    }
 }
 
 function prependCurrentFolder(

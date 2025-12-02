@@ -18,11 +18,11 @@ export function makeEnterPressedHandler(
         const later = async () => {
             try {
                 setLoading(true)
-                if (await service.fileExists(path)) {
-                    onFileSelect(path)
-                    return
-                }
-                if (await service.directoryExists(path)) {
+                // Since fs-exists is disabled, try to list the directory first
+                // If it succeeds, it's a directory. If it fails, try treating it as a file.
+                try {
+                    await service.listDirectory(path)
+                    // It's a directory
                     void listFolder(
                         path,
                         service,
@@ -33,10 +33,15 @@ export function makeEnterPressedHandler(
                         filter
                     )
                     return
+                } catch (dirEx) {
+                    // Not a directory, try as file (or just select it)
+                    // We can't check if it's a file without fs-exists, so just select it
+                    onFileSelect(path)
+                    return
                 }
-                setNotFound(true)
             } catch (ex) {
                 console.error(ex)
+                setNotFound(true)
             } finally {
                 setLoading(false)
             }
