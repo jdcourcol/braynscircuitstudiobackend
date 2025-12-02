@@ -10,7 +10,7 @@ from .version import VERSION
 @dataclass
 class Settings:
     host: str = "0.0.0.0"
-    port: int = 8000
+    port: int = 8001
     secure: bool = False
     certificate: str = ""
     key: str = ""
